@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -30,7 +34,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Viraj Flutter Demo Home Page'),
     );
   }
 }
@@ -55,6 +59,18 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // ✅ Firebase connection test:
+    FirebaseFirestore.instance.collection('test').get().then((snapshot) {
+      print('✅ Firebase connected! Documents found: ${snapshot.docs.length}');
+    }).catchError((e) {
+      print('❌ Firebase NOT connected: $e');
+    });
+  }
 
   void _incrementCounter() {
     setState(() {
